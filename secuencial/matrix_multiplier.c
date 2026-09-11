@@ -1,12 +1,3 @@
-/*
- * Problema 3: Multiplicacion de Matrices Densas (C = A x B)
- * Version secuencial (linea base).
- *
- * Uso: ./secuencial <N> [seed]
- *   N    -> dimension de las matrices cuadradas A, B y C (NxN)
- *   seed -> semilla para generar A y B de forma reproducible (default: 42)
- */
-
 #define _POSIX_C_SOURCE 199309L
 #include <stdio.h>
 #include <stdlib.h>
@@ -42,14 +33,6 @@ static void matrix_print(const double *m, size_t n) {
     }
 }
 
-/*
- * Orden de bucles i-k-j: para cada fila i, A[i][k] se lee una sola vez
- * y se reutiliza en todo el recorrido de j, mientras que B[k][j] y C[i][j]
- * se recorren de forma contigua en memoria. Esto minimiza relecturas de
- * A y B frente al orden clasico i-j-k, y es la base que luego se reparte
- * entre hilos en la version paralela (cada hilo se queda con un rango de
- * filas i completo, sin compartir escritura sobre C).
- */
 static void matrix_multiply(const double *A, const double *B, double *C, size_t n) {
     for (size_t i = 0; i < n; i++) {
         for (size_t k = 0; k < n; k++) {
@@ -61,8 +44,6 @@ static void matrix_multiply(const double *A, const double *B, double *C, size_t 
     }
 }
 
-/* Suma de todos los elementos de C, util como verificacion rapida sin
- * imprimir matrices completas cuando N es grande. */
 static double matrix_checksum(const double *m, size_t n) {
     double sum = 0.0;
     for (size_t i = 0; i < n * n; i++) {
